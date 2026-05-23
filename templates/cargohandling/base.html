@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ГрузоПеревозки{% endblock %}</title>
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+<header>
+    <nav>
+        <strong><a href="{% url 'index' %}">ГрузоПеревозки</a></strong>
+        <ul>
+            <li><a href="{% url 'index' %}">Главная</a></li>
+            <li><a href="{% url 'about' %}">О компании</a></li>
+            <li><a href="{% url 'articles' %}">Новости</a></li>
+            <li><a href="{% url 'drivers' %}">Водители</a></li>
+            <li><a href="{% url 'vehicles' %}">Транспорт</a></li>
+            <li><a href="{% url 'services' %}">Услуги</a></li>
+            <li><a href="{% url 'orders' %}">Заказы</a></li>
+            <li><a href="{% url 'reviews' %}">Отзывы</a></li>
+            <li><a href="{% url 'promos' %}">Промокоды</a></li>
+            <li><a href="{% url 'glossary' %}">Словарь</a></li>
+            <li><a href="{% url 'contacts' %}">Контакты</a></li>
+            <li><a href="{% url 'vacancies' %}">Вакансии</a></li>
+            {% if user.is_authenticated %}
+                <li><a href="{% url 'orders_api' %}">API заказов</a></li>
+            {% endif %}
+        </ul>
+        <div>
+            {% if user.is_authenticated %}
+                {% if user.is_superuser %}
+                    <a href="/admin/">Админ-панель</a> |
+                    <a href="{% url 'statistics' %}">Статистика</a> |
+                {% endif %}
+                <a href="{% url 'profile' %}">Личный кабинет</a> |
+                <a href="{% url 'logout' %}">Выйти ({{ user.username }})</a>
+            {% else %}
+                <a href="{% url 'login' %}">Войти</a> |
+                <a href="{% url 'register' %}">Регистрация</a>
+            {% endif %}
+        </div>
+    </nav>
+</header>
+
+<main>
+    {% if messages %}
+        <div>
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% block content %}{% endblock %}
+</main>
+
+<footer>
+    <section>
+        <h2>Дата и время</h2>
+        <p>Тайм зона пользователя: {{ user_timezone_name }}</p>
+        <p>Текущая дата пользователя: {{ current_user_date|date:"d/m/Y" }}</p>
+        <p>Текущая дата UTC: {{ current_utc_date|date:"d/m/Y" }}</p>
+        <pre>{{ text_calendar }}</pre>
+    </section>
+    <p>&copy; 2026 ГрузоПеревозки. Все права защищены.</p>
+    <p>
+        <a href="{% url 'privacy' %}">Политика конфиденциальности</a>
+    </p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,33 @@
+{% extends 'cargohandling/base.html' %}
+
+{% block title %}Услуги{% endblock %}
+
+{% block content %}
+<h1>Услуги</h1>
+
+<form method="get">
+    <p>
+        <label>Поиск:
+            <input type="search" name="q" value="{{ q }}" placeholder="Название услуги">
+        </label>
+        <label>Сортировка:
+            <select name="sort">
+                <option value="name" {% if sort == "name" %}selected{% endif %}>По названию</option>
+                <option value="price" {% if sort == "price" %}selected{% endif %}>Цена по возрастанию</option>
+                <option value="-price" {% if sort == "-price" %}selected{% endif %}>Цена по убыванию</option>
+            </select>
+        </label>
+        <button type="submit">Показать</button>
+    </p>
+</form>
+
+{% for service in services %}
+    <div>
+        <h3>{{ service.name }}</h3>
+        <p>{{ service.description }}</p>
+        <p>{{ service.price }} руб.</p>
+    </div>
+{% empty %}
+    <p>Услуги не найдены.</p>
+{% endfor %}
+{% endblock %}

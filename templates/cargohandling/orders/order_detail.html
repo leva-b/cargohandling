@@ -1,0 +1,42 @@
+{% extends 'cargohandling/base.html' %}
+{% load time_extras %}
+
+{% block title %}Заказ{% endblock %}
+
+{% block content %}
+<h1>Заказ #{{ order.id }}</h1>
+
+<p>Маршрут: {{ order.origin }} → {{ order.destination }}</p>
+<p>Статус: {{ order.get_status_display }}</p>
+<p>Стоимость: {{ order.price }}</p>
+<h2>Клиент</h2>
+<table border="1" cellpadding="8" cellspacing="0">
+    <tr><th>ФИО</th><td>{{ order.client }}</td></tr>
+    <tr><th>Телефон</th><td>{{ order.client.phone }}</td></tr>
+    <tr><th>Email</th><td>{{ order.client.email }}</td></tr>
+    <tr><th>Адрес</th><td>{{ order.client.address }}</td></tr>
+    <tr><th>Организация</th><td>{{ order.client.organization|default:"-" }}</td></tr>
+</table>
+<p>Водитель: {{ order.driver }}</p>
+<p>Создано ({{ user_timezone_name }}): {{ order.created_at|as_timezone:user_timezone_name|date:"d/m/Y H:i" }}</p>
+<p>Создано (UTC): {{ order.created_at|date:"d/m/Y H:i" }}</p>
+<p>Изменено ({{ user_timezone_name }}): {{ order.updated_at|as_timezone:user_timezone_name|date:"d/m/Y H:i" }}</p>
+<p>Изменено (UTC): {{ order.updated_at|date:"d/m/Y H:i" }}</p>
+
+<h3>Услуги</h3>
+{% for service in order.services.all %}
+    <p>{{ service.name }}</p>
+{% empty %}
+    <p>Услуг нет.</p>
+{% endfor %}
+
+{% if can_change_status %}
+    <p><a href="{% url 'order_status_edit' order.pk %}">Изменить статус</a></p>
+{% endif %}
+{% if can_edit_order %}
+    <p><a href="{% url 'order_edit' order.pk %}">Редактировать заказ</a></p>
+{% endif %}
+{% if can_delete_order %}
+    <p><a href="{% url 'order_delete' order.pk %}">Удалить заказ</a></p>
+{% endif %}
+{% endblock %}

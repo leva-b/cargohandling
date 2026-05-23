@@ -1,0 +1,54 @@
+{% extends 'cargohandling/base.html' %}
+
+{% block title %}{{ driver.get_full_name }} — ГрузоПеревозки{% endblock %}
+
+{% block content %}
+<h1>{{ driver.get_full_name }}</h1>
+
+<div>
+    {% if driver.photo %}
+        <img src="{{ driver.photo.url }}" alt="{{ driver.get_full_name }}" width="200">
+    {% endif %}
+
+    <table border="1" cellpadding="8" cellspacing="0">
+        <tr><th>ФИО</th><td>{{ driver.get_full_name }}</td></tr>
+        <tr><th>Телефон</th><td>{{ driver.phone }}</td></tr>
+        {% if driver.email %}
+            <tr><th>Email</th><td>{{ driver.email }}</td></tr>
+        {% endif %}
+        <tr><th>Возраст</th><td>{{ driver.age }} лет</td></tr>
+        <tr><th>Дата рождения</th><td>{{ driver.birth_date|date:"d/m/Y" }}</td></tr>
+        <tr><th>Категория ВУ</th><td>{{ driver.license_category }}</td></tr>
+        <tr><th>Номер ВУ</th><td>{{ driver.license_number }}</td></tr>
+        <tr><th>Стаж</th><td>{{ driver.experience_years }} лет</td></tr>
+        <tr><th>Доступен</th><td>{% if driver.is_available %}Да{% else %}Нет{% endif %}</td></tr>
+        <tr><th>Дата приёма на работу</th><td>{{ driver.hire_date|date:"d/m/Y" }}</td></tr>
+    </table>
+</div>
+
+{% if driver.vehicle %}
+    <section>
+        <h2>Транспортное средство</h2>
+        <table border="1" cellpadding="8" cellspacing="0">
+            <tr><th>Марка и модель</th><td>{{ driver.vehicle.brand }} {{ driver.vehicle.model }}</td></tr>
+            <tr><th>Гос. номер</th><td>{{ driver.vehicle.plate_number }}</td></tr>
+            <tr><th>Год выпуска</th><td>{{ driver.vehicle.year }}</td></tr>
+            <tr><th>Грузоподъёмность</th><td>{{ driver.vehicle.load_capacity_kg }} кг</td></tr>
+            {% if driver.vehicle.vehicle_type %}
+                <tr><th>Вид ТС</th><td>{{ driver.vehicle.vehicle_type }}</td></tr>
+            {% endif %}
+            {% if driver.vehicle.body_type %}
+                <tr><th>Тип кузова</th><td>{{ driver.vehicle.body_type }}</td></tr>
+            {% endif %}
+            <tr><th>Свободна</th><td>{% if driver.vehicle.is_available %}Да{% else %}Нет{% endif %}</td></tr>
+            {% if driver.vehicle.photo %}
+                <tr><th>Фото</th><td><img src="{{ driver.vehicle.photo.url }}" alt="Фото ТС" width="200"></td></tr>
+            {% endif %}
+        </table>
+    </section>
+{% else %}
+    <p>Транспортное средство не назначено.</p>
+{% endif %}
+
+<p><a href="{% url 'drivers' %}">← Назад к списку водителей</a></p>
+{% endblock %}

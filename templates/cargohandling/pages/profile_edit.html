@@ -1,0 +1,28 @@
+{% extends 'cargohandling/base.html' %}
+
+{% block title %}Редактировать личный кабинет{% endblock %}
+
+{% block content %}
+<h1>Редактировать личный кабинет</h1>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <h2>Данные пользователя</h2>
+    {{ user_form.as_p }}
+
+    {% if client_form %}
+        <h2>Профиль клиента</h2>
+        {{ client_form.as_p }}
+    {% endif %}
+
+    {% if driver_form %}
+        <h2>Профиль водителя</h2>
+        {{ driver_form.as_p }}
+    {% endif %}
+
+    <button type="submit">Сохранить</button>
+</form>
+
+<p><a href="{% url 'profile' %}">Назад в личный кабинет</a></p>
+{% endblock %}

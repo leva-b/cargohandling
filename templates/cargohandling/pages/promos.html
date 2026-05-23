@@ -1,0 +1,26 @@
+{% extends 'cargohandling/base.html' %}
+
+{% block title %}Промокоды{% endblock %}
+
+{% block content %}
+<h1>Промокоды</h1>
+
+<h2>Активные</h2>
+{% for promo in active %}
+    <div>
+        <p>{{ promo.code }}</p>
+        <p>{{ promo.discount_percent }}%</p>
+    </div>
+{% empty %}
+    <p>Нет активных промокодов.</p>
+{% endfor %}
+
+<h2>Архив</h2>
+{% for promo in archived %}
+    <div>
+        <p>{{ promo.code }}</p>
+    </div>
+{% empty %}
+    <p>Нет архивных промокодов.</p>
+{% endfor %}
+{% endblock %}

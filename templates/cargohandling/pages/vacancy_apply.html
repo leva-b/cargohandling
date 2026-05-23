@@ -1,0 +1,17 @@
+{% extends 'cargohandling/base.html' %}
+
+{% block title %}Отклик на вакансию{% endblock %}
+
+{% block content %}
+<h1>Отклик на вакансию</h1>
+<h2>{{ vacancy.title }}</h2>
+<p>{{ vacancy.description }}</p>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Отправить заявку</button>
+</form>
+
+<p><a href="{% url 'vacancies' %}">Назад к вакансиям</a></p>
+{% endblock %}

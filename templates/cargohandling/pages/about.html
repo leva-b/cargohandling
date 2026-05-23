@@ -1,0 +1,63 @@
+{% extends 'cargohandling/base.html' %}
+
+{% block title %}О компании — ГрузоПеревозки{% endblock %}
+
+{% block content %}
+<h1>О компании</h1>
+
+{% if company %}
+    <section>
+        {% if company.logo %}
+            <img src="{{ company.logo.url }}" alt="Логотип {{ company.name }}" width="200">
+        {% endif %}
+        <h2>{{ company.name }}</h2>
+        {% if company.founded_year %}
+            <p><strong>Год основания:</strong> {{ company.founded_year }}</p>
+        {% endif %}
+        {% if company.address %}
+            <p><strong>Адрес:</strong> {{ company.address }}</p>
+        {% endif %}
+        {% if company.phone %}
+            <p><strong>Телефон:</strong> {{ company.phone }}</p>
+        {% endif %}
+        {% if company.email %}
+            <p><strong>Email:</strong> {{ company.email }}</p>
+        {% endif %}
+        <p>{{ company.description }}</p>
+
+        {% if company.video_url %}
+            <h3>Видео о компании</h3>
+            <p><a href="{{ company.video_url }}" target="_blank">Смотреть видео</a></p>
+        {% endif %}
+
+        {% if company.requisites %}
+            <h3>Реквизиты</h3>
+            <pre>{{ company.requisites }}</pre>
+        {% endif %}
+    </section>
+
+    {% if company.history.all %}
+        <section>
+            <h2>История компании</h2>
+            <table border="1" cellpadding="8" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Год</th>
+                        <th>Событие</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for event in company.history.all %}
+                        <tr>
+                            <td>{{ event.year }}</td>
+                            <td>{{ event.event }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    {% endif %}
+{% else %}
+    <p>Информация о компании пока не добавлена.</p>
+{% endif %}
+{% endblock %}

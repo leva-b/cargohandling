@@ -1,0 +1,77 @@
+{% extends 'cargohandling/base.html' %}
+
+{% block title %}Статистика — ГрузоПеревозки{% endblock %}
+
+{% block content %}
+<h1>Статистика</h1>
+
+<section>
+    <h2>Общие показатели</h2>
+    <table border="1" cellpadding="8" cellspacing="0">
+        <tr><th>Всего заказов</th><td>{{ total_orders }}</td></tr>
+        <tr><th>Общая выручка</th><td>{{ total_revenue }} руб.</td></tr>
+        <tr><th>Средняя стоимость заказа</th><td>{{ avg_price }} руб.</td></tr>
+        <tr><th>Медиана стоимости заказа</th><td>{{ median_price }} руб.</td></tr>
+        <tr><th>Мода стоимости заказа</th><td>{{ mode_price }} руб.</td></tr>
+        <tr><th>Средний возраст клиентов</th><td>{{ avg_client_age }} лет</td></tr>
+        <tr><th>Медиана возраста клиентов</th><td>{{ median_client_age }} лет</td></tr>
+        <tr><th>Средний возраст водителей</th><td>{{ avg_driver_age }} лет</td></tr>
+        <tr><th>Медиана возраста водителей</th><td>{{ median_driver_age }} лет</td></tr>
+        {% if popular_cargo %}
+            <tr><th>Самый популярный вид груза</th><td>{{ popular_cargo.cargo_type__name }} ({{ popular_cargo.count }} заказов)</td></tr>
+        {% endif %}
+    </table>
+</section>
+
+<section>
+    <h2>Распределение заказов по статусам</h2>
+    <p><img src="{% url 'statistics_status_chart' %}" alt="Диаграмма статусов заказов" width="900" height="420"></p>
+    <table border="1" cellpadding="8" cellspacing="0">
+        <thead>
+            <tr><th>Статус</th><th>Количество</th><th>Диаграмма</th></tr>
+        </thead>
+        <tbody>
+            {% for stat in status_rows %}
+                <tr>
+                    <td>{{ stat.name }}</td>
+                    <td>{{ stat.count }}</td>
+                    <td><pre>{{ stat.bar }}</pre></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+
+<section>
+    <h2>Динамика заказов по датам (14 дней)</h2>
+    <p><img src="{% url 'statistics_orders_over_time_chart' %}" alt="График заказов по датам" width="900" height="360"></p>
+</section>
+
+<section>
+    <h2>Клиенты и их заказы</h2>
+    <table border="1" cellpadding="8" cellspacing="0">
+        <thead>
+            <tr>
+                <th>ФИО</th>
+                <th>Организация</th>
+                <th>Возраст</th>
+                <th>Телефон</th>
+                <th>Сумма заказов, руб.</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in clients_with_total %}
+                <tr>
+                    <td>{{ item.client.get_full_name }}</td>
+                    <td>{{ item.client.organization|default:"—" }}</td>
+                    <td>{{ item.client.age }}</td>
+                    <td>{{ item.client.phone }}</td>
+                    <td>{{ item.total }}</td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="5">Клиентов нет.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}

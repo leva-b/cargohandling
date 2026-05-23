@@ -1,0 +1,58 @@
+{% extends 'cargohandling/base.html' %}
+
+{% block title %}Отзывы — ГрузоПеревозки{% endblock %}
+
+{% block content %}
+<h1>Отзывы клиентов</h1>
+
+{% if user.is_authenticated %}
+    <section>
+        <h2>Оставить отзыв</h2>
+        <form method="post">
+            {% csrf_token %}
+            {% for field in form %}
+                <div>
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label><br>
+                    {{ field }}
+                    {% if field.errors %}
+                        {% for error in field.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            {% endfor %}
+            {% if form.non_field_errors %}
+                <div>{{ form.non_field_errors }}</div>
+            {% endif %}
+            <button type="submit">Отправить</button>
+        </form>
+    </section>
+{% else %}
+    <p>
+        Чтобы оставить отзыв, <a href="{% url 'login' %}?next={{ request.path }}">войдите</a>
+        или <a href="{% url 'register' %}">зарегистрируйтесь</a>.
+    </p>
+{% endif %}
+
+<section>
+    <h2>Все отзывы ({{ reviews|length }})</h2>
+    {% if reviews %}
+        {% for review in reviews %}
+            <div>
+                <strong>{{ review.user.username }}</strong>
+                &nbsp;
+                <span>
+                    {% for i in "12345" %}
+                        {% if forloop.counter <= review.rating %}★{% else %}☆{% endif %}
+                    {% endfor %}
+                </span>
+                &nbsp;
+                <small>{{ review.created_at|date:"d/m/Y" }}</small>
+                <p>{{ review.text }}</p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>Отзывов пока нет. Будьте первым!</p>
+    {% endif %}
+</section>
+{% endblock %}

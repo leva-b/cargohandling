@@ -1,0 +1,35 @@
+{% extends 'cargohandling/base.html' %}
+
+{% block title %}Транспорт{% endblock %}
+
+{% block content %}
+<h1>Транспорт</h1>
+
+<form method="get">
+    <p>
+        <label>Поиск:
+            <input type="search" name="q" value="{{ q }}" placeholder="Марка или модель">
+        </label>
+        <label>
+            <input type="checkbox" name="available" value="1" {% if available == "1" %}checked{% endif %}>
+            Только свободные
+        </label>
+        <button type="submit">Показать</button>
+    </p>
+</form>
+
+{% for vehicle in vehicles %}
+    <div>
+        <h3>{{ vehicle.brand }} {{ vehicle.model }}</h3>
+        {% if vehicle.photo %}
+            <p><img src="{{ vehicle.photo.url }}" alt="{{ vehicle }}" width="220"></p>
+        {% endif %}
+        <p>{{ vehicle.plate_number }}</p>
+        <p>{{ vehicle.load_capacity_kg }} кг</p>
+        <p>{{ vehicle.vehicle_type }} / {{ vehicle.body_type }}</p>
+        <p>{% if vehicle.is_available %}Свободна{% else %}Занята{% endif %}</p>
+    </div>
+{% empty %}
+    <p>Транспорт не найден.</p>
+{% endfor %}
+{% endblock %}

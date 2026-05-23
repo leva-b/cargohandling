@@ -1,0 +1,14 @@
+{% extends 'cargohandling/base.html' %}
+
+{% block title %}Удаление заказа{% endblock %}
+
+{% block content %}
+<h1>Удаление заказа</h1>
+
+<p>Удалить заказ #{{ order.id }}?</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Удалить</button>
+</form>
+{% endblock %}

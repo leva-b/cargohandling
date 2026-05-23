@@ -1,0 +1,17 @@
+{% extends 'cargohandling/base.html' %}
+
+{% block title %}Статус заказа{% endblock %}
+
+{% block content %}
+<h1>Изменить статус заказа #{{ order.pk }}</h1>
+
+<p>{{ order.origin }} - {{ order.destination }}</p>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Сохранить</button>
+</form>
+
+<p><a href="{% url 'order_detail' order.pk %}">Назад к заказу</a></p>
+{% endblock %}

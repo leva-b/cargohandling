@@ -1,0 +1,27 @@
+{% extends 'cargohandling/base.html' %}
+
+{% block title %}Вакансии — ГрузоПеревозки{% endblock %}
+
+{% block content %}
+<h1>Вакансии</h1>
+
+{% if vacancies %}
+    {% for vacancy in vacancies %}
+        <div>
+            <h2>{{ vacancy.title }}</h2>
+            {% if vacancy.salary %}
+                <p><strong>Зарплата:</strong> {{ vacancy.salary }}</p>
+            {% endif %}
+            <p>{{ vacancy.description }}</p>
+            <p><small>Опубликовано: {{ vacancy.created_at|date:"d/m/Y" }}</small></p>
+            {% if user.is_authenticated %}
+                <a href="{% url 'vacancy_apply' vacancy.pk %}">Откликнуться</a>
+            {% else %}
+                <a href="{% url 'login' %}?next={% url 'vacancy_apply' vacancy.pk %}">Войти, чтобы откликнуться</a>
+            {% endif %}
+        </div>
+    {% endfor %}
+{% else %}
+    <p>Активных вакансий пока нет. Следите за обновлениями.</p>
+{% endif %}
+{% endblock %}

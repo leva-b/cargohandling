@@ -1,0 +1,30 @@
+{% extends 'cargohandling/base.html' %}
+
+{% block title %}Контакты — ГрузоПеревозки{% endblock %}
+
+{% block content %}
+<h1>Контакты</h1>
+
+{% if contacts %}
+    <div>
+        {% for contact in contacts %}
+            <div>
+                {% if contact.photo %}
+                    <img src="{{ contact.photo.url }}" alt="{{ contact.full_name }}" width="120">
+                {% endif %}
+                <h3>{{ contact.full_name }}</h3>
+                <p><strong>Должность:</strong> {{ contact.position }}</p>
+                <p><strong>Телефон:</strong> {{ contact.phone }}</p>
+                {% if contact.email %}
+                    <p><strong>Email:</strong> <a href="mailto:{{ contact.email }}">{{ contact.email }}</a></p>
+                {% endif %}
+                {% if contact.description %}
+                    <p>{{ contact.description }}</p>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p>Контакты пока не добавлены.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'cargohandling/base.html' %}
+
+{% block title %}Новости — ГрузоПеревозки{% endblock %}
+
+{% block content %}
+<h1>Новости</h1>
+
+{% if articles %}
+    {% for article in articles %}
+        <article>
+            {% if article.image %}
+                <img src="{{ article.image.url }}" alt="{{ article.title }}" width="300">
+            {% endif %}
+            <h2><a href="{% url 'article_detail' article.pk %}">{{ article.title }}</a></h2>
+            <p><small>{{ article.published_at|date:"d/m/Y" }}</small></p>
+            <p>{{ article.summary }}</p>
+            <a href="{% url 'article_detail' article.pk %}">Читать далее</a>
+        </article>
+    {% endfor %}
+{% else %}
+    <p>Новостей пока нет.</p>
+{% endif %}
+{% endblock %}

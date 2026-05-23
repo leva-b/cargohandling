@@ -1,0 +1,10 @@
+[run]
+omit =
+    manage.py
+    IGI_LR5/settings.py
+    */migrations/*
+    */admin.py
+    */apps.py
+
+[report]
+show_missing = True

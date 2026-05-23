@@ -1,0 +1,65 @@
+{% extends 'cargohandling/base.html' %}
+
+{% block title %}Водители — ГрузоПеревозки{% endblock %}
+
+{% block content %}
+<h1>Водители</h1>
+
+<form method="get">
+    <input type="text" name="q" value="{{ q }}" placeholder="Поиск по фамилии или имени">
+    <label>Сортировка:
+        <select name="sort">
+            <option value="last_name" {% if sort == 'last_name' %}selected{% endif %}>По фамилии</option>
+            <option value="experience_years" {% if sort == 'experience_years' %}selected{% endif %}>Стаж ↑</option>
+            <option value="-experience_years" {% if sort == '-experience_years' %}selected{% endif %}>Стаж ↓</option>
+        </select>
+    </label>
+    <button type="submit">Применить</button>
+    {% if q or sort != 'last_name' %}<a href="{% url 'drivers' %}">Сбросить</a>{% endif %}
+</form>
+
+{% if drivers %}
+    <table border="1" cellpadding="8" cellspacing="0">
+        <thead>
+            <tr>
+                <th>Фото</th>
+                <th>ФИО</th>
+                <th>Телефон</th>
+                <th>Категория ВУ</th>
+                <th>Стаж, лет</th>
+                <th>Доступен</th>
+                <th>Транспорт</th>
+                <th>Подробнее</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for driver in drivers %}
+                <tr>
+                    <td>
+                        {% if driver.photo %}
+                            <img src="{{ driver.photo.url }}" alt="{{ driver }}" width="60" height="60">
+                        {% else %}
+                            —
+                        {% endif %}
+                    </td>
+                    <td>{{ driver.get_full_name }}</td>
+                    <td>{{ driver.phone }}</td>
+                    <td>{{ driver.license_category }}</td>
+                    <td>{{ driver.experience_years }}</td>
+                    <td>{% if driver.is_available %}✓{% else %}✗{% endif %}</td>
+                    <td>
+                        {% if driver.vehicle %}
+                            {{ driver.vehicle.brand }} {{ driver.vehicle.model }}
+                        {% else %}
+                            —
+                        {% endif %}
+                    </td>
+                    <td><a href="{% url 'driver_detail' driver.pk %}">Подробнее</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>Водители не найдены.</p>
+{% endif %}
+{% endblock %}
