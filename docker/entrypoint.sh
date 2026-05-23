@@ -9,4 +9,7 @@ if [[ "${DB_ENGINE:-}" == "postgres" || "${DB_ENGINE:-}" == "postgresql" ]]; the
 fi
 
 python manage.py migrate --noinput
-python manage.py runserver 0.0.0.0:8000
+python manage.py collectstatic --noinput  # добавляем сбор статики
+
+# Запускаем Gunicorn
+gunicorn IGI_LR5.wsgi:application --bind 0.0.0.0:8000 --workers 3
