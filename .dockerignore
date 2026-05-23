@@ -1,7 +1,9 @@
 .venv
 .idea
+.git
 __pycache__
 *.pyc
 db.sqlite3
 .coverage
 media
+.pytest_cache

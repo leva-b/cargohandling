@@ -8,7 +8,6 @@ from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
 from django.contrib import messages
 from django.db.models import Sum, Avg, Count, Q
 from django.utils import timezone
@@ -30,11 +29,6 @@ from PIL import Image, ImageDraw, ImageFont
 
 
 logger = logging.getLogger(__name__)
-
-
-# ─────────────────────────────────────────────────────────────
-# ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
-# ─────────────────────────────────────────────────────────────
 
 def _chart_font(size: int = 14):
     """
@@ -187,11 +181,6 @@ def promos(request):
         'active': active,
         'archived': archived,
     })
-
-
-# ─────────────────────────────────────────────────────────────
-# ВОДИТЕЛИ
-# ─────────────────────────────────────────────────────────────
 
 def drivers(request):
     q = request.GET.get('q', '')
