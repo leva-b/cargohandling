@@ -37,7 +37,7 @@ DEBUG = _env_bool('DEBUG', not IS_PRODUCTION)
 
 ALLOWED_HOSTS = [host.strip() for host in os.getenv(
     'ALLOWED_HOSTS',
-    '127.0.0.1,localhost,testserver'
+    '127.0.0.1,localhost,testserver,.railway.app'
 ).split(',') if host.strip()]
 CSRF_TRUSTED_ORIGINS = [origin.strip() for origin in os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',') if origin.strip()]
 USER_TIME_ZONE = 'Europe/Minsk'
