@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 import os
 from pathlib import Path
-import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,37 +20,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
-def _env_bool(name: str, default: bool = False) -> bool:
-    value = os.getenv(name)
-    if value is None:
-        return default
-    return value.strip().lower() in ('1', 'true', 'yes', 'on')
-
-
-def _env_csv(name: str, default: str = '') -> list[str]:
-    raw = os.getenv(name, default)
-    return [item.strip() for item in raw.split(',') if item.strip()]
-
-
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-g8)+ks4srt2$kt^2*u900v!-k=p3ggh)x4igedj3_^bqt-=1d-')
+SECRET_KEY = 'django-insecure-g8)+ks4srt2$kt^2*u900v!-k=p3ggh)x4igedj3_^bqt-=1d-'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-IS_PRODUCTION = _env_bool('DJANGO_PRODUCTION', False) or bool(os.getenv('RAILWAY_ENVIRONMENT'))
-DEBUG = _env_bool('DEBUG', not IS_PRODUCTION)
+DEBUG = False
 
-ALLOWED_HOSTS = [
-    '127.0.0.1',
-    'localhost',
-    'testserver',
-    'cargohandling-production-99a9.up.railway.app',
-]
-CSRF_TRUSTED_ORIGINS = _env_csv('CSRF_TRUSTED_ORIGINS', '')
-railway_public_domain = os.getenv('RAILWAY_PUBLIC_DOMAIN')
-if railway_public_domain:
-    railway_origin = f'https://{railway_public_domain}'
-    if railway_origin not in CSRF_TRUSTED_ORIGINS:
-        CSRF_TRUSTED_ORIGINS.append(railway_origin)
+ALLOWED_HOSTS = ['*']
 USER_TIME_ZONE = 'Europe/Minsk'
 
 
@@ -69,7 +44,6 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -110,15 +84,8 @@ DATABASES = {
     }
 }
 
-# Railway/PostgreSQL support via DATABASE_URL.
-if os.getenv('DATABASE_URL'):
-    DATABASES['default'] = dj_database_url.config(
-        default=os.getenv('DATABASE_URL'),
-        conn_max_age=int(os.getenv('CONN_MAX_AGE', '600')),
-        ssl_require=_env_bool('DB_SSL_REQUIRE', False),
-    )
 # Docker/PostgreSQL support (tests/dev default to sqlite unless enabled via env).
-elif os.getenv('DB_ENGINE', '').lower() in ('postgres', 'postgresql'):
+if os.getenv('DB_ENGINE', '').lower() in ('postgres', 'postgresql'):
     DATABASES['default'] = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.getenv('POSTGRES_DB', 'igi_lr5'),
@@ -165,25 +132,8 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STORAGES = {
-    'default': {
-        'BACKEND': 'django.core.files.storage.FileSystemStorage',
-    },
-    'staticfiles': {
-        'BACKEND': (
-            'whitenoise.storage.CompressedManifestStaticFilesStorage'
-            if not DEBUG else
-            'django.contrib.staticfiles.storage.StaticFilesStorage'
-        ),
-    },
-}
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-USE_X_FORWARDED_HOST = True
-SECURE_SSL_REDIRECT = _env_bool('DJANGO_SECURE_SSL_REDIRECT', IS_PRODUCTION)
-SESSION_COOKIE_SECURE = _env_bool('SESSION_COOKIE_SECURE', IS_PRODUCTION)
-CSRF_COOKIE_SECURE = _env_bool('CSRF_COOKIE_SECURE', IS_PRODUCTION)
 
 LOG_LEVEL = os.getenv('DJANGO_LOG_LEVEL', 'INFO')
 
