@@ -35,10 +35,12 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-g8)+ks4srt2$kt^2*u900v!-k=
 IS_PRODUCTION = _env_bool('DJANGO_PRODUCTION', False) or bool(os.getenv('RAILWAY_ENVIRONMENT'))
 DEBUG = _env_bool('DEBUG', not IS_PRODUCTION)
 
-ALLOWED_HOSTS = [host.strip() for host in os.getenv(
-    'ALLOWED_HOSTS',
-    '127.0.0.1,localhost,testserver,.railway.app'
-).split(',') if host.strip()]
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost',
+    'testserver',
+    'cargohandling-production-99a9.up.railway.app',
+]
 CSRF_TRUSTED_ORIGINS = [origin.strip() for origin in os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',') if origin.strip()]
 USER_TIME_ZONE = 'Europe/Minsk'
 
