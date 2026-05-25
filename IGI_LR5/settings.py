@@ -40,10 +40,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-g8)+ks4srt2$kt^2*u900v!-k=
 IS_PRODUCTION = _env_bool('DJANGO_PRODUCTION', False) or bool(os.getenv('RAILWAY_ENVIRONMENT'))
 DEBUG = _env_bool('DEBUG', not IS_PRODUCTION)
 
-ALLOWED_HOSTS = _env_csv(
-    'ALLOWED_HOSTS',
-    '127.0.0.1,localhost,testserver,.railway.app'
-)
+ALLOWED_HOSTS = ['*']
 CSRF_TRUSTED_ORIGINS = _env_csv('CSRF_TRUSTED_ORIGINS', '')
 railway_public_domain = os.getenv('RAILWAY_PUBLIC_DOMAIN')
 if railway_public_domain:
