@@ -33,7 +33,11 @@ class Command(BaseCommand):
         )
         if created:
             admin.set_password('admin12345')
-            admin.save()
+        # Keep admin permissions/password deterministic for demo environments.
+        admin.is_staff = True
+        admin.is_superuser = True
+        admin.email = admin.email or 'admin@example.com'
+        admin.save()
 
         company, _ = CompanyInfo.objects.get_or_create(
             name='ГрузоПеревозки',
@@ -126,6 +130,8 @@ class Command(BaseCommand):
                     'organization': organization if index % 2 == 0 else None,
                 },
             )
+            if not client.photo:
+                client.photo.save(f'client-{index}.png', self.make_image(f'Client {index}', (90, 120, 160)), save=True)
             clients.append(client)
 
         drivers = []

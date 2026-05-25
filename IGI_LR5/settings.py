@@ -32,7 +32,8 @@ def _env_bool(name: str, default: bool = False) -> bool:
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-g8)+ks4srt2$kt^2*u900v!-k=p3ggh)x4igedj3_^bqt-=1d-')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = _env_bool('DEBUG', False)
+IS_PRODUCTION = _env_bool('DJANGO_PRODUCTION', False) or bool(os.getenv('RAILWAY_ENVIRONMENT'))
+DEBUG = _env_bool('DEBUG', not IS_PRODUCTION)
 
 ALLOWED_HOSTS = [host.strip() for host in os.getenv(
     'ALLOWED_HOSTS',
@@ -157,7 +158,11 @@ STORAGES = {
         'BACKEND': 'django.core.files.storage.FileSystemStorage',
     },
     'staticfiles': {
-        'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
+        'BACKEND': (
+            'whitenoise.storage.CompressedManifestStaticFilesStorage'
+            if not DEBUG else
+            'django.contrib.staticfiles.storage.StaticFilesStorage'
+        ),
     },
 }
 MEDIA_URL = '/media/'

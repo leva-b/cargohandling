@@ -120,7 +120,7 @@ class UserProfileForm(forms.ModelForm):
 class ClientProfileForm(forms.ModelForm):
     class Meta:
         model = Client
-        fields = ['first_name', 'last_name', 'birth_date', 'phone', 'email', 'address']
+        fields = ['first_name', 'last_name', 'birth_date', 'phone', 'email', 'photo', 'address']
         widgets = {
             'birth_date': forms.DateInput(attrs={'type': 'date'}),
             'phone': forms.TextInput(attrs={

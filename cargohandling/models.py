@@ -34,6 +34,7 @@ class Person(models.Model):
     birth_date = models.DateField('Дата рождения', validators=[validate_adult])
     phone = models.CharField("Номер телефона", max_length=20, validators=[validate_phone])
     email = models.EmailField('Email', blank=True)
+    photo = models.ImageField('Фото', upload_to='profiles/', blank=True, null=True)
 
     class Meta:
         abstract = True
@@ -61,7 +62,6 @@ class Client(Person):
 
 class Driver(Person):
     user = models.OneToOneField(User,on_delete=models.CASCADE,  related_name='driver_profile')
-    photo = models.ImageField('Фото', upload_to='drivers/', blank=True, null=True)
     license_category = models.CharField('Категория', max_length=10, default='B')
     license_number = models.CharField('Номер ВУ', max_length=50)
     experience_years = models.PositiveIntegerField('Стаж, лет', default=0)

@@ -128,6 +128,9 @@
 {% if client %}
     <section>
         <h2>Мой профиль (Клиент)</h2>
+        {% if client.photo %}
+            <p><img src="{{ client.photo.url }}" alt="{{ client.get_full_name }}" width="160"></p>
+        {% endif %}
         <table border="1" cellpadding="8" cellspacing="0">
             <tr><th>ФИО</th><td>{{ client.get_full_name }}</td></tr>
             <tr><th>Телефон</th><td>{{ client.phone }}</td></tr>

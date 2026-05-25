@@ -468,7 +468,7 @@ def profile_edit(request):
 
     if request.method == 'POST':
         user_form = UserProfileForm(request.POST, instance=request.user)
-        client_form = ClientProfileForm(request.POST, instance=client) if client else None
+        client_form = ClientProfileForm(request.POST, request.FILES, instance=client) if client else None
         driver_form = DriverProfileForm(request.POST, request.FILES, instance=driver) if driver else None
 
         forms = [user_form]
