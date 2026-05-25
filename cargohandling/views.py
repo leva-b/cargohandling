@@ -30,6 +30,10 @@ from PIL import Image, ImageDraw, ImageFont
 
 logger = logging.getLogger(__name__)
 
+
+def healthz(request):
+    return HttpResponse('ok', content_type='text/plain')
+
 def _chart_font(size: int = 14):
     """
     PIL default bitmap font doesn't support Cyrillic, which results in "tofu" squares.

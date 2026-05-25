@@ -28,6 +28,11 @@ def _env_bool(name: str, default: bool = False) -> bool:
     return value.strip().lower() in ('1', 'true', 'yes', 'on')
 
 
+def _env_csv(name: str, default: str = '') -> list[str]:
+    raw = os.getenv(name, default)
+    return [item.strip() for item in raw.split(',') if item.strip()]
+
+
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-g8)+ks4srt2$kt^2*u900v!-k=p3ggh)x4igedj3_^bqt-=1d-')
 
@@ -35,13 +40,16 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-g8)+ks4srt2$kt^2*u900v!-k=
 IS_PRODUCTION = _env_bool('DJANGO_PRODUCTION', False) or bool(os.getenv('RAILWAY_ENVIRONMENT'))
 DEBUG = _env_bool('DEBUG', not IS_PRODUCTION)
 
-ALLOWED_HOSTS = [
-    '127.0.0.1',
-    'localhost',
-    'testserver',
-    'cargohandling-production-99a9.up.railway.app',
-]
-CSRF_TRUSTED_ORIGINS = [origin.strip() for origin in os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',') if origin.strip()]
+ALLOWED_HOSTS = _env_csv(
+    'ALLOWED_HOSTS',
+    '127.0.0.1,localhost,testserver,.railway.app'
+)
+CSRF_TRUSTED_ORIGINS = _env_csv('CSRF_TRUSTED_ORIGINS', '')
+railway_public_domain = os.getenv('RAILWAY_PUBLIC_DOMAIN')
+if railway_public_domain:
+    railway_origin = f'https://{railway_public_domain}'
+    if railway_origin not in CSRF_TRUSTED_ORIGINS:
+        CSRF_TRUSTED_ORIGINS.append(railway_origin)
 USER_TIME_ZONE = 'Europe/Minsk'
 
 
@@ -171,7 +179,9 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 USE_X_FORWARDED_HOST = True
-SECURE_SSL_REDIRECT = _env_bool('DJANGO_SECURE_SSL_REDIRECT', False)
+SECURE_SSL_REDIRECT = _env_bool('DJANGO_SECURE_SSL_REDIRECT', IS_PRODUCTION)
+SESSION_COOKIE_SECURE = _env_bool('SESSION_COOKIE_SECURE', IS_PRODUCTION)
+CSRF_COOKIE_SECURE = _env_bool('CSRF_COOKIE_SECURE', IS_PRODUCTION)
 
 LOG_LEVEL = os.getenv('DJANGO_LOG_LEVEL', 'INFO')
 
